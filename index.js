@@ -8,35 +8,36 @@ require('dotenv').config()
 
 mongo.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 app.use(cors())
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'))
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
 
-app.route("/api/users").post((req, res, done) => {
+app.route("/api/users").post(async (req, res) => {
   const newUsername = req.body.username
 
   console.log(newUsername)
   const newUser = new User({name: newUsername})
 
-  newUser.save((err, data) => {
-    if (err){
-      return done(err)
-    }
+  try {
+    const data = await newUser.save();
     res.json({username: data.name, _id: data._id})
-    done(null, data)
-  })
-}).get((req, res, done) => {
-  User.find((err, users) => {
-    if(err){
-      return done(err)
-    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred while saving the user.' });
+  }
+}).get(async (req, res) => {
+  try {
+    const users = await User.find();
     res.json({username: users.name, _id: users._id})
-    done(null, users)
-  })
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred while retrieving the users.' });
+  }
 })
+
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
