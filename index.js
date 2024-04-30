@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors')
 const mongo = require('mongoose')
 const User = require('./models/userModel');
+const Exercise = require('./models/exerciseModel')
 const bodyParser = require('body-parser');
 require('dotenv').config()
 
