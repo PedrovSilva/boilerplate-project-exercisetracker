@@ -6,6 +6,12 @@ router
   .route("/api/users")
   .post(async (req, res) => {
     const newUsername = req.body.username;
+    if (!newUsername) {
+      console.error(err);
+    res
+      .status(500)
+      .json({ error: "username required." });
+    }
     const newUser = new User({ name: newUsername });
 
     try {
