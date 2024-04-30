@@ -12,13 +12,18 @@ router.route("/api/users/:_id/exercises").post(async (req, res) => {
     return res.status(404).json({ error: "User not found" });
   }
 
-  const newExercise = new Exercise({
+  const newExerciseData = {
     userId: user._id,
     username: user.name,
     description: req.body.description,
     duration: req.body.duration,
-    date: req.body.date,
-  });
+  };
+
+  if (req.body.date) {
+    newExerciseData.date = req.body.date;
+  }
+
+  const newExercise = new Exercise(newExerciseData);
 
   try {
     const data = await newExercise.save();
