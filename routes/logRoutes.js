@@ -21,12 +21,14 @@ router.route("/api/users/:_id/logs").get(async (req, res) => {
     }
 
     let exercises = await Exercise.find(query); // Find exercises that match the query
-
+    if(!exercises) {
+        exercises = {}
+    }
     // If 'limit' is defined, limit the number of logs
     if (limit) {
       exercises = exercises.slice(0, limit);
     }
-
+    
     // Transform exercises into the desired format
     const logs = exercises.map((exercise) => ({
       description: exercise.description,
@@ -38,7 +40,7 @@ router.route("/api/users/:_id/logs").get(async (req, res) => {
       username: exercises[0]?.username,
       count: exercises.length,
       _id: userId,
-      logs: logs,
+      log: logs,
     });
   } catch (err) {
     console.error(err);
