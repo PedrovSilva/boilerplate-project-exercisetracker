@@ -1,8 +1,12 @@
 const mongo = require('mongoose')
-const User = require('./models/userModel');
-const Exercise = require('./models/exerciseModel')
+const User = require('../models/userModel.js');
+const {exerciseSchema} = require('../models/exerciseModel')
 
 const logSchema = mongo.Schema({
+    _id: {
+        type: mongo.Schema.Types.ObjectId,
+        auto: true
+    },
     username: {
         type: String,
         required: true
@@ -11,13 +15,13 @@ const logSchema = mongo.Schema({
         type: Number,
         required: true
     },
-    _id: {
+    userId: {
         type: mongo.Schema.Types.ObjectId,
-        ref: User,
+        ref: 'User',
         required: true
     },
     log: {
-        type: [Exercise],
+        type: [exerciseSchema],
         required: true
     }
 })
