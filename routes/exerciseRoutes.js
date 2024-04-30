@@ -27,9 +27,9 @@ router.route("/api/users/:_id/exercises").post(async (req, res) => {
 
   try {
     const data = await newExercise.save();
-
+    console.log(data)
     res.json({
-      _id: data.userId,
+      _id: data._id,
       username: data.username,
       date: dateFormat(data.date),
       duration: parseInt(data.duration),
