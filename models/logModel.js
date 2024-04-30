@@ -21,7 +21,7 @@ const logSchema = mongo.Schema({
         required: true
     },
     log: {
-        type: [exerciseSchema],
+        type: [],
         required: true
     }
 })

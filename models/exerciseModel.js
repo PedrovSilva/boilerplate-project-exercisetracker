@@ -22,17 +22,10 @@ const exerciseSchema = new mongo.Schema({
     date: {
         type: Date,
         default: Date.now,
-        get: (timestamp) => {
-            const date  = new Date(timestamp)
-            const options = {weekday: 'short', year: 'numeric',
-                            month: 'short', day: 'numeric'}
-
-            const formattedDate = date.toLocaleDateString('en-US', options)
-            return formattedDate.replace(/,/g,'')
-        }
+       
+            
+        
     }
-}, {
-    toJSON: {getters: true} // Aqui é onde você define a opção 'getters'
 });
 
 const Exercise = mongo.model("Exercise", exerciseSchema)

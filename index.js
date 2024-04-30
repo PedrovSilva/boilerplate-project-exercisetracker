@@ -5,6 +5,7 @@ const mongo = require('mongoose')
 const User = require('./models/userModel.js');
 const {Exercise} = require('./models/exerciseModel.js')
 const bodyParser = require('body-parser');
+const dateFormat = require('./models/dateFormater.js')
 require('dotenv').config()
 
 mongo.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -54,9 +55,10 @@ app.route("/api/users/:_id/exercises").post(async (req, res) => {
   
   try {
     const data = await newExercise.save()
+    
     res.json({username: data.username,
               description: data.description,
-              date: data.date,
+              date: dateFormat(data.date),
               duration: data.duration,
               _id: data.userId})
   }
