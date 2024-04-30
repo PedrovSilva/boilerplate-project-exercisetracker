@@ -29,11 +29,11 @@ router.route("/api/users/:_id/exercises").post(async (req, res) => {
     const data = await newExercise.save();
 
     res.json({
+      _id: data.userId,
       username: data.username,
-      description: data.description,
       date: dateFormat(data.date),
       duration: data.duration,
-      _id: data.userId,
+      description: data.description,
     });
   } catch (err) {
     console.error(err);
