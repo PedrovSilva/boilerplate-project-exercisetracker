@@ -4,43 +4,62 @@ const User = require("../models/userModel.js");
 const { Exercise } = require("../models/exerciseModel.js");
 const dateFormat = require("../utils/dateFormater.js");
 
-router.route("/api/users/:_id/exercises").post(async (req, res) => {
-  const user = await User.findById(req.params._id);
-  console.log(user._id);
+router
+  .route("/api/users/:_id/exercises")
+  .post(async (req, res) => {
+    const user = await User.findById(req.params._id);
+    console.log(user._id);
 
-  if (!user) {
-    return res.status(404).json({ error: "User not found" });
-  }
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-  const newExerciseData = {
-    userId: user._id,
-    username: user.name,
-    description: req.body.description,
-    duration: parseInt(req.body.duration),
-  };
+    const newExerciseData = {
+      userId: user._id,
+      username: user.name,
+      description: req.body.description,
+      duration: parseInt(req.body.duration),
+    };
 
-  if (req.body.date) {
-    newExerciseData.date = req.body.date;
-  }
+    if (req.body.date) {
+      newExerciseData.date = req.body.date;
+    }
 
-  const newExercise = new Exercise(newExerciseData);
+    const newExercise = new Exercise(newExerciseData);
 
-  try {
-    const data = await newExercise.save();
-    console.log(data)
-    res.json({
-      _id: data.userId,
-      username: data.username,
-      date: dateFormat(data.date),
-      duration: parseInt(data.duration),
-      description: data.description,
-    });
-  } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .json({ error: "An error occurred while adding the exercise." });
-  }
-});
+    try {
+      const data = await newExercise.save();
+      console.log(data);
+      res.json({
+        _id: data.userId,
+        username: data.username,
+        date: dateFormat(data.date),
+        duration: parseInt(data.duration),
+        description: data.description,
+      });
+    } catch (err) {
+      console.error(err);
+      res
+        .status(500)
+        .json({ error: "An error occurred while adding the exercise." });
+    }
+  })
+  .get(async (req, res) => {
+    try {
+      const exercises = await Exercise.find({ userId: req.params._id });
+      const exercisesFormatted = exercises.map((exercises) => ({
+        _id: exercises.userId,
+        username: exercises.username,
+        date: dateFormat(exercises.date),
+        duration: parseInt(exercises.duration),
+        description: exercises.description,
+      }));
+      res.json(exercisesFormatted);
+    } catch (err) {
+      res
+        .status(500)
+        .json({ error: "An error occurred while retrieving the users." });
+    }
+  });
 
 module.exports = router;
