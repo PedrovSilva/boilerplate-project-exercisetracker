@@ -35,9 +35,9 @@ router.route("/api/users/:_id/logs").get(async (req, res) => {
     }));
 
     res.json({
-      _id: userId,
-      username: exercises[0]?.username, // Assuming all exercises have the same username
+      username: exercises[0]?.username,
       count: exercises.length,
+      _id: userId,
       logs: logs,
     });
   } catch (err) {
