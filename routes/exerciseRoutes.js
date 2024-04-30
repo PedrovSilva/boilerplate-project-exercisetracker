@@ -16,7 +16,7 @@ router.route("/api/users/:_id/exercises").post(async (req, res) => {
     userId: user._id,
     username: user.name,
     description: req.body.description,
-    duration: req.body.duration,
+    duration: parseInt(req.body.duration),
   };
 
   if (req.body.date) {
