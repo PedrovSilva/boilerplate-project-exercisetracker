@@ -1,33 +1,27 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const mongo = require('moongose')
+const mongo = require('mongoose')
+const User = require('./models/userModel');
+const bodyParser = require('body-parser');
 require('dotenv').config()
 
 mongo.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 app.use(cors())
+app.use(bodyParser.json());
 app.use(express.static('public'))
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
-const userSchema = new mongo.Schema({
-  _id:{
-    type: mongoose.Schema.Types.ObjectId,
-    auto:true
-  },
-  name:{
-    type: String,
-    require:true
-  }
-})
-
-const User = mongo.Model("User", userSchema)
 
 app.route("/api/users").post((req, res, done) => {
-  const newUser = req.body
+  const newUsername = req.body.username
 
-  newUser.Save((err, data) => {
+  console.log(newUsername)
+  const newUser = new User({name: newUsername})
+
+  newUser.save((err, data) => {
     if (err){
       return done(err)
     }
@@ -39,8 +33,8 @@ app.route("/api/users").post((req, res, done) => {
     if(err){
       return done(err)
     }
-    res.json({username: data.name, _id: data._id})
-    done(null, data)
+    res.json({username: users.name, _id: users._id})
+    done(null, users)
   })
 })
 
