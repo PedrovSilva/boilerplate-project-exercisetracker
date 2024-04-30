@@ -31,8 +31,15 @@ app.route("/api/users").post((req, res, done) => {
     if (err){
       return done(err)
     }
-    res.json({_id: data._id, 
-              username: data.name})
+    res.json({username: data.name, _id: data._id})
+    done(null, data)
+  })
+}).get((req, res, done) => {
+  User.find((err, users) => {
+    if(err){
+      return done(err)
+    }
+    res.json({username: data.name, _id: data._id})
     done(null, data)
   })
 })
