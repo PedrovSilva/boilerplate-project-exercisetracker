@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const { Exercise } = require("../models/exerciseModel.js");
-const dateFormat = require("../utils/dateFormater.js");
 
 router.route("/api/users/:_id/logs").get(async (req, res) => {
   const userId = req.params._id;
@@ -33,7 +32,7 @@ router.route("/api/users/:_id/logs").get(async (req, res) => {
     const logs = exercises.map((exercise) => ({
       description: exercise.description,
       duration: exercise.duration,
-      date: dateFormat(exercise.date),
+      date: new Date(exercise.date).toDateString(),
     }));
 
     res.json({

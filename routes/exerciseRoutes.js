@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/userModel.js");
 const { Exercise } = require("../models/exerciseModel.js");
-const dateFormat = require("../utils/dateFormater.js");
 
 router
   .route("/api/users/:_id/exercises")
@@ -33,7 +32,7 @@ router
       res.json({
         _id: data.userId,
         username: data.username,
-        date: dateFormat(data.date),
+        date: new Date(data.date).toDateString(),
         duration: parseInt(data.duration),
         description: data.description,
       });
@@ -44,22 +43,5 @@ router
         .json({ error: "An error occurred while adding the exercise." });
     }
   })
-  .get(async (req, res) => {
-    try {
-      const exercises = await Exercise.find({ userId: req.params._id });
-      const exercisesFormatted = exercises.map((exercises) => ({
-        _id: exercises.userId,
-        username: exercises.username,
-        date: dateFormat(exercises.date),
-        duration: parseInt(exercises.duration),
-        description: exercises.description,
-      }));
-      res.json(exercisesFormatted);
-    } catch (err) {
-      res
-        .status(500)
-        .json({ error: "An error occurred while retrieving the users." });
-    }
-  });
 
 module.exports = router;
